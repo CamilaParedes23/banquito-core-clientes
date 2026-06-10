@@ -14,8 +14,6 @@ WORKDIR /app
 
 COPY --from=build /workspace/target/*.jar app.jar
 
-# Exponemos el puerto por defecto de Spring Boot (puedes cambiarlo si usas otro)
-EXPOSE 8010
 ENV SPRING_PROFILES_ACTIVE=docker
 ENV JAVA_OPTS=""
 

@@ -1,0 +1,2 @@
+-- Los clientes demo se crean con DemoDataInitializer para evitar datos rígidos en ambientes productivos.
+-- Desactivar con DEMO_DATA_ENABLED=false.
