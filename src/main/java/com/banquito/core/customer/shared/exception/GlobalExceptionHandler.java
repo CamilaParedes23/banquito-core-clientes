@@ -3,9 +3,12 @@ package com.banquito.core.customer.shared.exception;
 import com.banquito.core.customer.api.dto.api.ErrorResponse;
 import com.banquito.core.customer.shared.tracing.CorrelationIdHolder;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +22,8 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusiness(BusinessException exception) {
@@ -91,12 +96,29 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException exception) {
+        String correlationId = CorrelationIdHolder.get();
+        Throwable mostSpecificCause = exception.getMostSpecificCause();
+        String sqlCause = mostSpecificCause == null ? exception.getMessage() : mostSpecificCause.getMessage();
+
+        log.error("Data integrity violation in customer-service. correlationId={}, sqlCause={}",
+                correlationId, sqlCause, exception);
+
+        if (sqlCause != null && sqlCause.contains("UK_CLIENTE_IDENT")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(
+                    LocalDateTime.now(),
+                    correlationId,
+                    "CUSTOMER_IDENTIFICATION_ALREADY_EXISTS",
+                    "Ya existe un cliente con esa identificación",
+                    List.of()
+            ));
+        }
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(
                 LocalDateTime.now(),
-                CorrelationIdHolder.get(),
+                correlationId,
                 "DATA_INTEGRITY_VIOLATION",
                 "La operación no puede completarse porque viola una regla de integridad de datos.",
-                List.of(exception.getClass().getSimpleName())
+                List.of("Consulte los logs internos mediante X-Correlation-Id")
         ));
     }
 
@@ -111,8 +133,20 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(
+                LocalDateTime.now(),
+                CorrelationIdHolder.get(),
+                "SECURITY_ACCESS_DENIED",
+                "Acceso denegado. El token no posee permisos para este recurso.",
+                List.of()
+        ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        log.error("Unhandled exception in customer-service. correlationId={}", CorrelationIdHolder.get(), exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
                 LocalDateTime.now(),
                 CorrelationIdHolder.get(),

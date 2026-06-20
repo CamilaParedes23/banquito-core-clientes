@@ -80,6 +80,7 @@ public class CustomerQueryGrpcService extends CustomerQueryServiceGrpc.CustomerQ
                 .setDisplayName(nvl(r.displayName()))
                 .setStatus(nvl(r.status()))
                 .setMassPaymentsEnabled(Boolean.TRUE.equals(r.massPaymentsEnabled()))
+                .setEmail(nvl(r.email()))
                 .build();
     }
 

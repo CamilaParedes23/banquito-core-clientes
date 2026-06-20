@@ -51,6 +51,25 @@ public class SubtipoCliente {
 
     public SubtipoCliente(Integer id) { this.id = id; }
 
+    public static SubtipoCliente crear(String codigo, TipoClienteEnum tipoCliente, String nombre, String descripcion) {
+        SubtipoCliente subtipo = new SubtipoCliente();
+        subtipo.codigo = codigo;
+        subtipo.tipoCliente = tipoCliente;
+        subtipo.nombre = nombre;
+        subtipo.descripcion = descripcion;
+        subtipo.estado = EstadoSubtipoClienteEnum.ACTIVO;
+        return subtipo;
+    }
+
+    public void actualizar(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+
+    public void cambiarEstado(EstadoSubtipoClienteEnum estado) {
+        this.estado = estado;
+    }
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();

@@ -19,15 +19,24 @@ public class CustomerMapper {
     }
 
     public CustomerBasicResponse toBasicResponse(Cliente cliente, Optional<ClientePersonaNatural> natural,
-                                                 Optional<ClientePersonaJuridica> juridica) {
+                                                 Optional<ClientePersonaJuridica> juridica,
+                                                 String legalRepresentativeName) {
+        ClientePersonaJuridica legal = juridica.orElse(null);
         return new CustomerBasicResponse(
                 cliente.getUuidCliente(),
                 cliente.getTipoCliente().name(),
                 cliente.getTipoIdentificacion().name(),
                 cliente.getIdentificacion(),
                 displayName(cliente, natural, juridica),
-                cliente.getEstado().name(),
-                cliente.getActivoPagosMasivos()
+                legal == null ? null : legal.getNombreComercial(),
+                cliente.getSubtipoCliente().getCodigo(),
+                cliente.getSubtipoCliente().getNombre(),
+                cliente.getEmail(),
+                cliente.getTelefonoMovil(),
+                legal == null ? null : legal.getRepresentanteLegalIdentificacion(),
+                legalRepresentativeName,
+                cliente.getActivoPagosMasivos(),
+                cliente.getEstado().name()
         );
     }
 

@@ -65,6 +65,12 @@ public class ClientePersonaJuridica {
         return juridica;
     }
 
+    public void actualizarDatosCorporativos(String razonSocial, String nombreComercial, String actividadEconomica) {
+        this.razonSocial = razonSocial;
+        this.nombreComercial = nombreComercial;
+        this.actividadEconomica = actividadEconomica;
+    }
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();

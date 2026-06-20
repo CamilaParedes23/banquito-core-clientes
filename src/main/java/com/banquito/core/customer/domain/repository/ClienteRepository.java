@@ -9,10 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Optional<Cliente> findByUuidCliente(String uuidCliente);
+    List<Cliente> findByUuidClienteIn(Collection<String> uuidClientes);
     Optional<Cliente> findByTipoIdentificacionAndIdentificacion(TipoIdentificacionEnum tipoIdentificacion, String identificacion);
     Optional<Cliente> findByIdentificacion(String identificacion);
     boolean existsByTipoIdentificacionAndIdentificacion(TipoIdentificacionEnum tipoIdentificacion, String identificacion);

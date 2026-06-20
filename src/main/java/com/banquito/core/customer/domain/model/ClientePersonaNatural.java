@@ -62,6 +62,12 @@ public class ClientePersonaNatural {
         return natural;
     }
 
+    public void actualizarDatosPersonales(String nombres, String apellidos, String nacionalidad) {
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.nacionalidad = nacionalidad;
+    }
+
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();

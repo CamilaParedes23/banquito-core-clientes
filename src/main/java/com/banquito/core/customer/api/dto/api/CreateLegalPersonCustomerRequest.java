@@ -20,7 +20,7 @@ public record CreateLegalPersonCustomerRequest(
         @Size(max = 180) String tradeName,
         @NotNull @PastOrPresent LocalDate incorporationDate,
         @Size(max = 200) String economicActivity,
-        @Size(max = 36) String legalRepresentativeUuid,
-        @Size(max = 20) String legalRepresentativeIdentification,
+        @NotBlank @Size(max = 36) String legalRepresentativeUuid,
+        @NotBlank @Size(max = 20) String legalRepresentativeIdentification,
         Boolean massPaymentsEnabled
 ) {}

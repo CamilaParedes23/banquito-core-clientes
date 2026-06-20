@@ -13,6 +13,6 @@ public class OutboxEventService {
     private final OutboxEventRepository repository;
 
     public void registrarEvento(String tipoEvento, String agregadoTipo, String agregadoId, String payloadJson) {
-        repository.save(OutboxEvent.crear(CorrelationIdHolder.get(), tipoEvento, agregadoTipo, agregadoId, payloadJson));
+        repository.saveAndFlush(OutboxEvent.crear(CorrelationIdHolder.get(), tipoEvento, agregadoTipo, agregadoId, payloadJson));
     }
 }

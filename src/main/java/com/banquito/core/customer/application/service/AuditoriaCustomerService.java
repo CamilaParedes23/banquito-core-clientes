@@ -15,7 +15,7 @@ public class AuditoriaCustomerService {
 
     public void registrar(String uuidUsuario, String accion, String entidad, String entidadId,
                           ResultadoAuditoriaCustomerEnum resultado, String ipOrigen, String detalleJson) {
-        repository.save(AuditoriaCustomerEvento.crear(
+        repository.saveAndFlush(AuditoriaCustomerEvento.crear(
                 CorrelationIdHolder.get(), uuidUsuario, accion, entidad, entidadId, resultado, ipOrigen, detalleJson
         ));
     }

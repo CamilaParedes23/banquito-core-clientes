@@ -68,6 +68,7 @@ public class AuditoriaCustomerEvento {
         evento.entidad = entidad;
         evento.entidadId = entidadId;
         evento.resultado = resultado;
+        evento.canalOrigen = "BACKOFFICE";
         evento.ipOrigen = ipOrigen;
         evento.detalleJson = detalleJson;
         return evento;

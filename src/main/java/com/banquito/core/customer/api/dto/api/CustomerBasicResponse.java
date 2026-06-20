@@ -6,6 +6,13 @@ public record CustomerBasicResponse(
         String identificationType,
         String identification,
         String displayName,
-        String status,
-        Boolean massPaymentsEnabled
+        String tradeName,
+        String subtypeCode,
+        String subtypeName,
+        String email,
+        String mobilePhone,
+        String legalRepresentativeIdentification,
+        String legalRepresentativeName,
+        Boolean massPaymentsEnabled,
+        String status
 ) {}

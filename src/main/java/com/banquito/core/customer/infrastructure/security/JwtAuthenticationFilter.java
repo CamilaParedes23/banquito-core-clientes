@@ -1,5 +1,7 @@
 package com.banquito.core.customer.infrastructure.security;
 
+import com.banquito.core.customer.api.dto.internal.AuthenticatedActor;
+
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,13 +43,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (roles instanceof List<?> list) {
                     list.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role)));
                 }
+                AuthenticatedActor actor = new AuthenticatedActor(
+                        claims.getSubject(),
+                        (String) claims.get("username"),
+                        (String) claims.get("clientId"),
+                        (String) claims.get("actorType"),
+                        toStringList((List<?>) roles),
+                        toStringList((List<?>) scopes),
+                        (String) claims.get("referenceUuid"),
+                        (String) claims.get("referenceType"),
+                        (String) claims.get("customerUuid")
+                );
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        claims.getSubject(), null, authorities);
+                        actor, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception ignored) {
                 SecurityContextHolder.clearContext();
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private List<String> toStringList(List<?> values) {
+        if (values == null) return List.of();
+        return values.stream().map(String::valueOf).toList();
     }
 }

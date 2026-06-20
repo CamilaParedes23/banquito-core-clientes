@@ -12,4 +12,7 @@ public interface SubtipoClienteRepository extends JpaRepository<SubtipoCliente, 
     Optional<SubtipoCliente> findByCodigo(String codigo);
     Optional<SubtipoCliente> findByCodigoAndTipoClienteAndEstado(String codigo, TipoClienteEnum tipoCliente, EstadoSubtipoClienteEnum estado);
     List<SubtipoCliente> findByTipoClienteAndEstadoOrderByNombreAsc(TipoClienteEnum tipoCliente, EstadoSubtipoClienteEnum estado);
+    List<SubtipoCliente> findByEstadoOrderByTipoClienteAscNombreAsc(EstadoSubtipoClienteEnum estado);
+    List<SubtipoCliente> findByTipoClienteOrderByNombreAsc(TipoClienteEnum tipoCliente);
+    List<SubtipoCliente> findAllByOrderByTipoClienteAscNombreAsc();
 }
