@@ -188,3 +188,8 @@ Se crean datos demo mínimos con `DemoDataInitializer` si `DEMO_DATA_ENABLED=tru
 - relación `REPRESENTANTE_LEGAL`.
 
 En nube o ambientes formales se recomienda `DEMO_DATA_ENABLED=false` y usar seeds controlados por Flyway o scripts de carga definidos por volumetría del docente.
+
+## Seguridad y autorización agregada
+
+El servicio aplica autorización por propiedad del cliente. Backoffice puede consultar y administrar clientes; un cliente autenticado solo puede consultar o actualizar su propio `customerUuid`, obtenido desde el JWT emitido por `identity-access-service`. Los listados generales y cambios de estado quedan restringidos a roles internos.
+
