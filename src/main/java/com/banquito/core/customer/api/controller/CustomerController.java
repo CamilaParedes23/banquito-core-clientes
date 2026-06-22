@@ -94,7 +94,7 @@ public class CustomerController {
     }
 
     @GetMapping("/by-identification/{identification}")
-    @PreAuthorize("@customerAccessPolicy.canBackoffice(authentication)")
+    @PreAuthorize("@customerAccessPolicy.canBackofficeOrSwitchCustomerRead(authentication)")
     public CustomerBasicResponse getCustomerByIdentification(@PathVariable String identification) {
         return customerService.buscarPorIdentificacion(identification);
     }
